@@ -2,22 +2,20 @@
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', true);
 
-require('libs/Smarty/Smarty.class.php');
 require('includes/config.php');
 require('includes/functions.php');
+require('includes/template.class.php');
 
 ConnectToDatabase();
 
-$smarty = new Smarty();
+$tpl = new Template();
 
 // Get config from database
-$keys = array('site_title', 'template_dir', 'mod_rewrite');
-$config = GetConfigItems($keys);
+$config = GetConfigItems();
 
-$tpldir = $config['template_dir'];
-$smarty->assign('template_dir', $tpldir);
-$smarty->assign('site_title', $config['site_title']);
-$smarty->assign('mod_rewrite', $config['mod_rewrite']);
+$tpldir = 'templates/'.$config['template_dir'];
+$tpl->set('template_dir', $tpldir);
+$tpl->set('site_title', $config['site_title']);
 
 // Work out sql query
 if (!isset($_GET['image']))
@@ -33,34 +31,28 @@ $current_image = GetImageFromQuery($query);
 
 if ($current_image != null)
 {
-    $smarty->assign('image', $current_image);
+    SetImage($tpl, $current_image, 'image');
     
     // Look up previous and next
     $query = "SELECT * FROM ${db_prefix}entry WHERE date<'".$current_image['date']."' ORDER BY date desc LIMIT 1";
     $previous_image = GetImageFromQuery($query);
-    if ($previous_image != null)
-    {
-        $smarty->assign('previous', $previous_image);
-    }
+    SetImage($tpl, $previous_image, 'previous');
     
     $query = "SELECT * FROM ${db_prefix}entry WHERE date>'".$current_image['date']."' ORDER BY date asc LIMIT 1";
     $next_image = GetImageFromQuery($query);
-    if ($next_image != null)
-    {
-        $smarty->assign('next', $next_image);
-    }
+    SetImage($tpl, $next_image, 'next');
 }
 
-$tpl = "image.tpl";
+$filename = "image.tpl";
 
 if (isset($_GET['page']))
 {
-    if (file_exists("templates/".$tpldir.$_GET['page'].".tpl"))
+    if (file_exists($tpldir.$_GET['page'].".tpl"))
     {
-        $tpl = $_GET['page'].".tpl";
+        $filename = $_GET['page'].".tpl";
     }
 }
 
-$smarty->display($tpldir.$tpl);
+$tpl->display($tpldir.$filename);
 
 ?>

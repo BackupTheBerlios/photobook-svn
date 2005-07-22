@@ -1,4 +1,4 @@
-{include file=$template_dir|cat:"header.tpl"}
+<?php include($template_dir."header.tpl"); ?>
 
 <table>
 <tr>
@@ -35,4 +35,4 @@ This work is licensed under a <a rel="license" href="http://creativecommons.org/
 <tr><td colspan="2" class="seperator"></td></tr>
 </table>
 
-{include file=$template_dir|cat:"footer.tpl"}
+<?php include($template_dir."footer.tpl"); ?>

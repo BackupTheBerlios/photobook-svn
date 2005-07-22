@@ -13,19 +13,13 @@ function CleanInput($value)
    return $value;
 }
 
-function GetConfigItems($keys)
+function GetConfigItems()
 {
     global $db_prefix;
     
     $value = array();
     
-    $query = "SELECT * FROM ${db_prefix}config WHERE";
-    
-    for ($i=0; $i < count($keys); $i++)
-    {
-        $query = $query." item='${keys[$i]}' OR";
-    }
-    $query = $query." 1=0";
+    $query = "SELECT * FROM ${db_prefix}config";
     
     $result = mysql_query($query);
     while ($row = mysql_fetch_array($result))
@@ -33,14 +27,35 @@ function GetConfigItems($keys)
         $value[$row['item']] = $row['value'];
     }
     
+    // Convert special fields from string to correct value
+    if (strtolower($value['mod_rewrite']) == 'true')
+    {
+        $value['mod_rewrite'] = true;
+    }
+    else
+    {
+        $value['mod_rewrite'] = false;
+    }
+        
     return $value;
+}
+
+function SetImage(&$tpl, $image, $prefix)
+{
+    $tpl->set($prefix.'_title', $image['title']);
+    $tpl->set($prefix.'_permalink', $image['permalink']);
+    $tpl->set($prefix.'_url', $image['image']);
+    $tpl->set($prefix.'_width', $image['width']);
+    $tpl->set($prefix.'_height', $image['height']);
+    $tpl->set($prefix.'_date', $image['date']);
+    $tpl->set($prefix.'_body', $image['body']);
 }
 
 function MakeImageURL($id)
 {
-    global $mod_rewrite;
+    global $config;
     
-    if ($mod_rewrite)
+    if ($config['mod_rewrite'])
     {
         return "image/".$id;
     }
@@ -52,9 +67,9 @@ function MakeImageURL($id)
 
 function MakePageURL($page)
 {
-    global $mod_rewrite;
-    
-    if ($mod_rewrite)
+    global $config;
+            
+    if ($config['mod_rewrite'])
     {
         return $page;
     }
@@ -92,9 +107,6 @@ function ConnectToDatabase()
     mysql_select_db($db_name) or die("Database not found " . mysql_error());
 }
 
-// redirect ***************************************************************
-// Purpose: Redirects to relative URL on the current site
-// Author: http://www.edoceo.com/
 function Redirect($to)
 {
   $schema = $_SERVER['SERVER_PORT'] == '443' ? 'https' : 'http';
@@ -104,8 +116,6 @@ function Redirect($to)
   else
   {
     header("HTTP/1.1 301 Moved Permanently");
-    // header("HTTP/1.1 302 Found");
-    // header("HTTP/1.1 303 See Other");
     header("Location: $schema://$host$self/$to");
     exit();
   }

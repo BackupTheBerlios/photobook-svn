@@ -1,14 +1,18 @@
-{include file=$template_dir|cat:"header.tpl"}
+<?php include($template_dir."header.tpl"); ?>
 
 <table class="main">
     <tr>
         <td class="name">
-            {$image.title}
+            <?= $image_title; ?>
         </td>
         <td class="navigation">
-            {if $previous}<a href="{$previous.permalink}">Previous</a>{/if} |
-            <a href="{$image.permalink}">Permalink</a> |
-            {if $next}<a href="{$next.permalink}">Next</a>{/if}
+            <?php if ($previous_permalink): ?>
+            <a href="<?= $previous_permalink; ?>">Previous</a>
+            <?php endif ?> |
+            <a href="<?= $image_permalink; ?>">Permalink</a> |
+            <?php if ($next_permalink): ?>
+            <a href="<?= $next_permalink; ?>">Next</a>
+            <?php endif ?>
         </td>
     </tr>
 </table>
@@ -16,12 +20,12 @@
 <table class="main">
     <tr>
         <td colspan="2" class="image">
-            <img src="{$image.image}" width="{$image.width}" height="{$image.height}" />
+            <img src="<?= $image_url; ?>" width="<?= $image_width; ?>" height="<?= $image_height; ?>" />
         </td>
     </tr>
     <tr>
         <td class="info">
-            {$image.date} |
+            <?= $image_date; ?> |
             <IMAGE_CATEGORY>
         </td>
         <td rowspan="3" class="exif">
@@ -36,7 +40,7 @@
     </tr>
     <tr>
         <td class="notes">
-            {$image.body}
+            <?= $image_body; ?>
         </td>
     </tr>
     <tr>
@@ -52,4 +56,4 @@
     </tr>
 </table>
 
-{include file=$template_dir|cat:"footer.tpl"}
+<?php include($template_dir."footer.tpl"); ?>

@@ -2,8 +2,8 @@
 
 <html>
 <head>
-<title>{$site_title}</title>
-<link rel="stylesheet" href="templates/{$template_dir}styles.css" type="text/css" />
+<title><?=$site_title;?></title>
+<link rel="stylesheet" href="<?=$template_dir;?>styles.css" type="text/css" />
 </head>
 
 <body>
@@ -12,17 +12,11 @@
 <table class="header">
     <tr>
         <td class="title">
-            {$site_title}
+            <?=$site_title;?>
         </td>
         <td class="menu">
             <a href="index.php">Current</a> | 
-            <a href="{strip}
-            {if $mod_rewrite}
-            about
-            {else}
-            index.php?page=about
-            {/if}
-            {/strip}">About</a> | 
+            <a href="<?=MakePageURL("about");?>">About</a> | 
             Archives
         </td>
     </tr>
