@@ -40,17 +40,6 @@ function GetConfigItems()
     return $value;
 }
 
-function SetImage(&$tpl, $image, $prefix)
-{
-    $tpl->set($prefix.'_title', $image['title']);
-    $tpl->set($prefix.'_permalink', $image['permalink']);
-    $tpl->set($prefix.'_url', $image['image']);
-    $tpl->set($prefix.'_width', $image['width']);
-    $tpl->set($prefix.'_height', $image['height']);
-    $tpl->set($prefix.'_date', $image['date']);
-    $tpl->set($prefix.'_body', $image['body']);
-}
-
 function MakeImageURL($id)
 {
     global $config;
@@ -79,7 +68,47 @@ function MakePageURL($page)
     }
 }
 
+function SetImage(&$tpl, $image, $prefix)
+{
+    $tpl->set($prefix.'_title', $image['title']);
+    $tpl->set($prefix.'_permalink', $image['permalink']);
+    $tpl->set($prefix.'_url', $image['url']);
+    $tpl->set($prefix.'_thumbnail', $image['thumbnail']);
+    $tpl->set($prefix.'_width', $image['width']);
+    $tpl->set($prefix.'_height', $image['height']);
+    $tpl->set($prefix.'_date', $image['date']);
+    $tpl->set($prefix.'_body', $image['body']);
+}
+
 function GetImageFromQuery($query)
+{
+    $result = mysql_query($query);
+    
+    $row = null;
+    
+    $images = Array();
+    
+    while ($row = mysql_fetch_array($result, MYSQL_ASSOC))
+    {
+        // Set image object
+        $row['url'] = 'images/'.$row['image'];
+        $row['thumbnail'] = 'thumbnails/'.$row['image'];
+        $row['permalink'] = MakeImageURL($row['id']);
+        $row['body'] = nl2br($row['body']);
+        list($width, $height, $type, $attr) = getimagesize($row['url']);
+        $row['width'] = $width;
+        $row['height'] = $height;
+        list($width, $height, $type, $attr) = getimagesize($row['thumbnail']);
+        $row['thumbwidth'] = $width;
+        $row['thumbheight'] = $height;
+        
+        $images[] = $row;
+    }
+
+    return $images;
+}
+
+function GetCountFromQuery($query)
 {
     $result = mysql_query($query);
     
@@ -87,16 +116,10 @@ function GetImageFromQuery($query)
     
     if ($row = mysql_fetch_array($result))
     {
-        // Set image object
-        $row['image'] = 'images/'.$row['image'];
-        $row['permalink'] = MakeImageURL($row['id']);
-        $row['body'] = nl2br($row['body']);
-        list($width, $height, $type, $attr) = getimagesize($row['image']);
-        $row['width'] = $width;
-        $row['height'] = $height;
+        return $row['count'];
     }
-
-    return $row;
+    
+    return 0;
 }
 
 function ConnectToDatabase()
