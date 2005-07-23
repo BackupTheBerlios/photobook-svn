@@ -17,18 +17,16 @@ function GetConfigItems()
 {
     global $db_prefix;
     
-    $value = array();
-    
     $query = "SELECT * FROM ${db_prefix}config";
     
     $result = mysql_query($query);
-    while ($row = mysql_fetch_array($result))
+    if ($row = mysql_fetch_array($result))
     {
-        $value[$row['item']] = $row['value'];
+        $value = $row;
     }
     
     // Convert special fields from string to correct value
-    if (strtolower($value['mod_rewrite']) == 'true')
+    if (strtolower($value['mod_rewrite']) == '1')
     {
         $value['mod_rewrite'] = true;
     }

@@ -1,10 +1,15 @@
 <?php
-//ini_set('error_reporting', E_ALL);
-//ini_set('display_errors', true);
-error_reporting(1);
+error_reporting(E_ALL ^ E_NOTICE);
 
-require('includes/config.php');
 require('includes/functions.php');
+
+if (!file_exists('config.php'))
+{
+    redirect('admin/install.php');
+    exit();
+}
+
+require('config.php');
 require('includes/template.class.php');
 
 ConnectToDatabase();
@@ -61,6 +66,14 @@ else
     $query = "SELECT * FROM ${db_prefix}entry WHERE ID='".CleanInput($_GET['image'])."'";
 }
 $current_image_array = GetImageFromQuery($query);
+
+if (count($current_image_array) < 1)
+{
+    // redirect to admin login
+    //Redirect("admin/index.php");
+    exit();
+}
+
 $current_image = $current_image_array[0];
 SetImage($tpl, $current_image, 'image');
     
@@ -69,13 +82,19 @@ if ($current_image != null)
     // Look up previous and next
     $query = "SELECT * FROM ${db_prefix}entry WHERE date<'".$current_image['date']."' ORDER BY date desc LIMIT 1";
     $previous_image = GetImageFromQuery($query);
-    $previous_image = $previous_image[0];
-    SetImage($tpl, $previous_image, 'previous');
+    if (count($previous_image) > 0)
+    {
+        $previous_image = $previous_image[0];
+        SetImage($tpl, $previous_image, 'previous');
+    }
     
     $query = "SELECT * FROM ${db_prefix}entry WHERE date>'".$current_image['date']."' ORDER BY date asc LIMIT 1";
     $next_image = GetImageFromQuery($query);
-    $next_image = $next_image[0];
-    SetImage($tpl, $next_image, 'next');
+    if (count($next_image) > 0)
+    {
+        $next_image = $next_image[0];
+        SetImage($tpl, $next_image, 'next');
+    }
 }
 
 // *****************************************************************************
