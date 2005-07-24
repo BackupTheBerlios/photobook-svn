@@ -68,14 +68,15 @@ function MakePageURL($page)
 
 function SetImage(&$tpl, $image, $prefix)
 {
-    $tpl->set($prefix.'_title', $image['title']);
-    $tpl->set($prefix.'_permalink', $image['permalink']);
-    $tpl->set($prefix.'_url', $image['url']);
-    $tpl->set($prefix.'_thumbnail', $image['thumbnail']);
-    $tpl->set($prefix.'_width', $image['width']);
-    $tpl->set($prefix.'_height', $image['height']);
-    $tpl->set($prefix.'_date', $image['date']);
-    $tpl->set($prefix.'_body', $image['body']);
+    $tpl->set('s_'.$prefix, $image);
+    $tpl->set('s_'.$prefix.'_title', $image['title']);
+    $tpl->set('s_'.$prefix.'_permalink', $image['permalink']);
+    $tpl->set('s_'.$prefix.'_url', $image['url']);
+    $tpl->set('s_'.$prefix.'_thumbnail', $image['thumbnail']);
+    $tpl->set('s_'.$prefix.'_width', $image['width']);
+    $tpl->set('s_'.$prefix.'_height', $image['height']);
+    $tpl->set('s_'.$prefix.'_date', $image['date']);
+    $tpl->set('s_'.$prefix.'_body', $image['body']);
 }
 
 function GetImageFromQuery($query)

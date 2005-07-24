@@ -2,8 +2,8 @@
 
 <html>
 <head>
-<title><?=$site_title?></title>
-<link rel="stylesheet" href="<?=$template_dir?>styles.css" type="text/css" />
+<title><?=$s_site_title?></title>
+<link rel="stylesheet" href="<?=$s_template_dir?>styles.css" type="text/css" />
 </head>
 
 <body>
@@ -12,7 +12,7 @@
 <table class="header">
     <tr>
         <td class="title">
-            <?=$site_title?>
+            <?=$s_site_title?>
         </td>
         <td class="menu">
             <a href="index.php">Current</a> | 

@@ -1,18 +1,14 @@
-<?php include($template_dir."header.tpl") ?>
+<?php include($s_template_dir."header.tpl") ?>
 
 <table class="main">
     <tr>
         <td class="name">
-            <?= $image_title ?>
+            <?= $s_image_title ?>
         </td>
         <td class="navigation">
-            <?php if ($previous_permalink): ?>
-            <a href="<?= $previous_permalink ?>">Previous</a>
-            <?php endif ?> |
-            <a href="<?= $image_permalink ?>">Permalink</a> |
-            <?php if ($next_permalink): ?>
-            <a href="<?= $next_permalink ?>">Next</a>
-            <?php endif ?>
+            <?= $c_previous_link ?> |
+            <?= $c_image_permalink ?> |
+            <?= $c_next_link ?>
         </td>
     </tr>
 </table>
@@ -20,12 +16,12 @@
 <table class="main">
     <tr>
         <td colspan="2" class="image">
-            <img src="<?= $image_url ?>" width="<?= $image_width ?>" height="<?= $image_height ?>" />
+            <?= $c_image_tag ?>
         </td>
     </tr>
     <tr>
         <td class="info">
-            <?= $image_date ?> |
+            <?= $s_image_date ?> |
             <!-- IMAGE_CATEGORY -->
         </td>
         <td rowspan="3" class="exif">
@@ -40,7 +36,7 @@
     </tr>
     <tr>
         <td class="notes">
-            <?= $image_body ?>
+            <?= $s_image_body ?>
         </td>
     </tr>
     <tr>
@@ -48,7 +44,7 @@
     </tr>
     <tr>
         <td colspan="2" class="thumbrow">
-            <?php foreach($thumbs as $thumb): ?><a href="<?= $thumb['permalink'] ?>"><img src="<?= $thumb['thumbnail'] ?>" title="<?= $thumb['title'] ?>" width="<?= $thumb['thumbwidth'] ?>" height="<?= $thumb['thumbheight'] ?>" class="<? if ($thumb['current']): ?>current-thumbnail<? else: ?>thumbnails<? endif ?>" /></a><?php endforeach ?>
+            <?= $c_thumbrow ?>
         </td>
     </tr>
     <tr>
